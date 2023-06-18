@@ -1,6 +1,7 @@
 import whois
 import dns.resolver
 import requests
+from requests.exceptions import ConnectTimeout, ReadTimeout
 from bs4 import BeautifulSoup
 import tldextract
 import re
