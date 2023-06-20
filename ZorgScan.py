@@ -41,6 +41,7 @@ def scan_website(url):
         parsed_url = tldextract.extract(url)
         domain = parsed_url.domain + '.' + parsed_url.suffix
         registrar = get_registrar(domain)
+        registrar, registrar_email = get_registrar(domain)
 
         # Ottieni il tipo di server web utilizzato
         server_type = get_server_type(response.headers)
@@ -82,6 +83,7 @@ def scan_website(url):
             ["File robots.txt", robots_txt_content],
             ["Cloudflare", "Sì" if is_cloudflare else "No"],
             ["Registrar", registrar],
+            ["Email del registrar", registrar_email if registrar_email else "Nessuna email del registrar trovata"],
             ["Sottodomini", "\n".join(subdomains) if subdomains else "Nessun sottodominio trovato"]
         ]
 
@@ -95,7 +97,8 @@ def get_registrar(domain):
     try:
         whois_info = whois.whois(domain)
         registrar = whois_info.registrar
-        return registrar
+        registrar_email = whois_info.emails
+        return registrar, registrar_email
     except Exception as e:
         return "Impossibile ottenere il registrar"
 
